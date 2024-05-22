@@ -11,6 +11,9 @@ class ParamClassClassifierActions:
 
     def add(self, param_id, prodclass_id, min_value=None, max_value=None):
         try:
+            if min_value is not None and max_value is not None and min_value > max_value:
+                return ("Ошибка: Минимальное значение не может быть больше максимального.")
+                
             new_param_class = ParamClass(param_id=param_id, prodclass_id=prodclass_id, min_value=min_value, max_value=max_value)
             self.session.add(new_param_class)
             self.session.commit()
@@ -42,6 +45,8 @@ class ParamClassClassifierActions:
 
     def set_paramcl(self, param_class_id, min_value=None, max_value=None):
         try:
+            if min_value is not None and max_value is not None and min_value > max_value:
+                return ("Ошибка: Минимальное значение не может быть больше максимального.")
             param_class = self.session.query(ParamClass).filter_by(id=param_class_id).first()
             if param_class:
                 if min_value is not None:
