@@ -11,6 +11,7 @@ from classifier.paramclassactions import ParamClassClassifierActions
 from classifier.paramproductactions import ParamProductClassifierActions
 
 def main():
+    drop_db()
     create_db()
 
     with session_maker() as session:
