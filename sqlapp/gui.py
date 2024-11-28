@@ -8,6 +8,7 @@ from handlers.unit import UnitHandler
 from handlers.param import ParamHandler
 from handlers.paramcl import ParamClassHandler
 from handlers.parampr import ParamProdHandler
+from handlers.spec import SpecificationHandler
 
 class GuiApp(customtkinter.CTk):
     def __init__(self, session):
@@ -21,6 +22,7 @@ class GuiApp(customtkinter.CTk):
         self.handler_param = ParamHandler(session)
         self.handler_paramcl = ParamClassHandler(session)
         self.handler_parampr = ParamProdHandler(session)
+        self.handler_spec = SpecificationHandler(session)
         
         # Настройка окна
         self.geometry("1000x600")
@@ -102,6 +104,7 @@ class GuiApp(customtkinter.CTk):
         self.insert_output_text("param help    [Параметры]\n")
         self.insert_output_text("paramcl help  [Параметры классов]\n")
         self.insert_output_text("parampr help  [Параметры продуктов]\n")
+        self.insert_output_text("spec help     [Спецификации]\n")
         self.insert_output_text("exit          [Выход из программы]\n")
 
     def run_command(self, event):        
@@ -154,6 +157,10 @@ class GuiApp(customtkinter.CTk):
 
         elif command == "parampr":
             result = self.handler_parampr.handle(args)
+            self.insert_output_text(result)
+
+        elif command == "spec":
+            result = self.handler_spec.handle(args)
             self.insert_output_text(result)
 
         else:

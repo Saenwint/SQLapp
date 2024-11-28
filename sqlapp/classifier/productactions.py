@@ -8,9 +8,15 @@ class ProductActions:
         error_message = ' '.join(map(str, args))
         return f'{error_message}'
 
-    def add(self, product_name, prod_class_id=None, enum_classifier_id=None):
+    def add(self, product_name, prod_class_id=None, enum_classifier_id=None, price=None, quantity=None):
         try:
-            new_product = Product(product_name=product_name, prod_class_id=prod_class_id, enum_classifier_id=enum_classifier_id)
+            new_product = Product(
+                product_name=product_name,
+                prod_class_id=prod_class_id,
+                enum_classifier_id=enum_classifier_id,
+                price=price,
+                quantity=quantity
+            )
             self.session.add(new_product)
             self.session.commit()
             return "Продукт успешно добавлен!"
@@ -141,6 +147,40 @@ class ProductActions:
         except Exception as e:
             return (
                 self.format_error("Ошибка: Не удалось проверить класс для продукта."),
+                self.format_error("Тип исключения:", type(e)),
+                self.format_error("Описание ошибки:", str(e))
+            )
+
+    def set_price(self, product_id, price):
+        try:
+            product = self.session.query(Product).get(product_id)
+            if product:
+                product.price = price
+                self.session.commit()
+                return "Стоимость продукта успешно обновлена!"
+            else:
+                return "Продукт не найден по указанному идентификатору."
+        except Exception as e:
+            self.session.rollback()
+            return (
+                self.format_error("Ошибка: Не удалось обновить стоимость продукта."),
+                self.format_error("Тип исключения:", type(e)),
+                self.format_error("Описание ошибки:", str(e))
+            )
+
+    def set_quantity(self, product_id, quantity):
+        try:
+            product = self.session.query(Product).get(product_id)
+            if product:
+                product.quantity = quantity
+                self.session.commit()
+                return "Количество продукта успешно обновлено!"
+            else:
+                return "Продукт не найден по указанному идентификатору."
+        except Exception as e:
+            self.session.rollback()
+            return (
+                self.format_error("Ошибка: Не удалось обновить количество продукта."),
                 self.format_error("Тип исключения:", type(e)),
                 self.format_error("Описание ошибки:", str(e))
             )

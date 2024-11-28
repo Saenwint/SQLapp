@@ -9,6 +9,7 @@ from classifier.productactions import ProductActions
 from classifier.paramactions import ParamClassifierActions
 from classifier.paramclassactions import ParamClassClassifierActions
 from classifier.paramproductactions import ParamProductClassifierActions
+from classifier.specificationsactions import SpecificationActions
 
 def main():
     drop_db()
@@ -22,6 +23,7 @@ def main():
         paramactions = ParamClassifierActions(session)
         paramclassactions = ParamClassClassifierActions(session)
         paramproductactions = ParamProductClassifierActions(session)
+        specificationactions = SpecificationActions(session)
 
         # Заполнение данными
         unitactions.add("Штука", "шт")
@@ -37,38 +39,13 @@ def main():
 
         prodclassactions.add("Шкафы для жилых помещений", 1, 3)
 
-        productactions.add("Шкафы для учебных заведений", 3)
-        productactions.add("Шкафы для административных помещений", 3)
-        productactions.add("Шкафы детские", 3)
+        productactions.add("Шкафы для учебных заведений", 3, price=100.0, quantity=10)
+        productactions.add("Шкафы для административных помещений", 3, price=150.0, quantity=5)
+        productactions.add("Шкафы детские", 3, price=200.0, quantity=3)
 
-        productactions.add("Шкафы для одежды", 6)
-        productactions.add("Шкафы для белья", 6)
-        productactions.add("Шкафы для книг", 6)
-
-        productactions.add("Столы бытовые", 4)
-        productactions.add("Столы для учебных заведений", 4)
-        
-        productactions.add("Стелажи бытовые", 5)
-        productactions.add("Стелажи библиотечные", 5)
-        productactions.add("Стелажи для торговых помещений", 5)
-        productactions.add("Стелажи для мастерских", 5)
-        
-        productactions.add("Стелажи1", 5)
-        productactions.add("Стелажи2", 5)
-        productactions.add("Стелажи3", 5)
-        productactions.add("Стелажи4", 5)
-        productactions.add("Стелажи5", 5)
-        productactions.add("Стелажи6", 5)
-        productactions.add("Стелажи7", 5)
-        productactions.add("Стелажи8", 5)
-        productactions.add("Стелажи9", 5)
-        productactions.add("Стелажи10", 5)
-        productactions.add("Стелажи11", 5)
-        productactions.add("Стелажи12", 5)
-        productactions.add("Стелажи13", 5)
-        productactions.add("Стелажи14", 5)
-        productactions.add("Стелажи15", 5)
-        productactions.add("Стелажи16", 5)
+        productactions.add("Шкафы для одежды", 6, price=250.0, quantity=7)
+        productactions.add("Шкафы для белья", 6, price=300.0, quantity=2)
+        productactions.add("Шкафы для книг", 6, price=350.0, quantity=4)
 
         paramactions.add("Первый параметр", "пер", 2)
         paramactions.add("Второй параметр", "вт", 2)
@@ -80,6 +57,11 @@ def main():
         paramclassactions.add(3, 4, 120, 130)
 
         paramproductactions.add(1, 2, 150)
+
+        # Добавление строк спецификации
+        specificationactions.add_line(1, 2, 2.5)
+        specificationactions.add_line(1, 3, 1.0)
+        specificationactions.add_line(2, 4, 3.0)
 
         # Запуск GUI
         app = GuiApp(session)
