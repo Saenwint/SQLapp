@@ -31,6 +31,8 @@ class ProdHandler:
             return self.prod_setprice(args[1:])
         elif command == "setquantity":
             return self.prod_setquantity(args[1:])
+        elif command == "sumnorms":
+            return self.prod_sumnorms(args[1:])
         else:
             return "Недопустимая команда. Введите 'prod help', чтобы увидеть доступные команды."
 
@@ -47,6 +49,7 @@ class ProdHandler:
             "prod checkcl        [product_id] [prod_class_id]\n"
             "prod setprice       [product_id] [price]\n"
             "prod setquantity    [product_id] [quantity]\n"
+            "prod sumnorms       [product_id] [resource_class_id]\n"
         )
 
     def prod_add(self, args):
@@ -118,3 +121,10 @@ class ProdHandler:
         product_id = args[0]
         quantity = int(args[1])
         return self.product_actions.set_quantity(product_id, quantity)
+    
+    def prod_sumnorms(self, args):
+        if len(args) < 2:
+            return "Ошибка: Пожалуйста, укажите идентификатор продукта и идентификатор класса ресурсов."
+        product_id = args[0]
+        resource_class_id = args[1]
+        return self.product_actions.calculate_summary_norms(product_id, resource_class_id)

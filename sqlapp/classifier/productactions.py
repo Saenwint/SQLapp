@@ -1,4 +1,6 @@
 from models.product import Product
+from models.param_product import ParamProduct
+from models.param_class import ParamClass
 
 class ProductActions:
     def __init__(self, session):
@@ -181,6 +183,40 @@ class ProductActions:
             self.session.rollback()
             return (
                 self.format_error("Ошибка: Не удалось обновить количество продукта."),
+                self.format_error("Тип исключения:", type(e)),
+                self.format_error("Описание ошибки:", str(e))
+            )
+        
+    def calculate_summary_norms(self, product_id, resource_class_id):
+        try:
+            # Преобразуйте product_id и resource_class_id в целые числа
+            product_id = int(product_id)
+            resource_class_id = int(resource_class_id)
+
+            product = self.session.query(Product).get(product_id)
+            if not product:
+                return "Продукт не найден по указанному идентификатору."
+
+            # Получаем все параметры продукта
+            params = self.session.query(ParamProduct).filter_by(product_id=product_id).all()
+
+            summary_norms = {}
+            for param in params:
+                param_class = self.session.query(ParamClass).get(param.param_class_id)
+                # Фильтруем параметры по классу ресурсов
+                if param_class and param_class.prodclass_id == resource_class_id:
+                    if param_class.param_id not in summary_norms:
+                        summary_norms[param_class.param_id] = 0
+                    summary_norms[param_class.param_id] += param.value
+
+            result = "Сводные нормы расхода для класса ресурсов:\n"
+            for param_id, value in summary_norms.items():
+                result += f"Параметр ID: {param_id}, Суммарное значение: {value}\n"
+
+            return result
+        except Exception as e:
+            return (
+                self.format_error("Ошибка при расчете сводных норм расхода."),
                 self.format_error("Тип исключения:", type(e)),
                 self.format_error("Описание ошибки:", str(e))
             )
